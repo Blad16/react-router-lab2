@@ -1,5 +1,25 @@
 import { Outlet } from "react-router-dom";
 import { Outlet, Link } from "react-router-dom";
+import { getContacts } from "../contacts";
+import {
+    Outlet,
+    Link,
+    useLoaderData,
+    Form,
+  } from "react-router-dom";
+  import { getContacts } from "../contacts";
+  import { getContacts, createContact } from "../contacts";
+  export async function action() {
+    const contact = await createContact();
+    return { contact };
+  }
+  
+
+
+export async function loader() {
+    const { contacts } = useLoaderData();
+    return { contacts };
+  }
 
 export default function Root() {
     return (
@@ -20,6 +40,9 @@ export default function Root() {
                 aria-hidden
                 hidden={true}
               />
+              <div><Form method="post">
+            <button type="submit">New</button>
+          </Form></div>
               <div
                 className="sr-only"
                 aria-live="polite"
@@ -30,18 +53,34 @@ export default function Root() {
             </form>
           </div>
           <nav>
+          {contacts.length ? (
             <ul>
-              <li>
-              <Link to={`contacts/1`}>Your Name</Link>
-              </li>
-              <li>
-              <Link to={`contacts/2`}>Your Name</Link>
-              </li>
+              {contacts.map((contact) => (
+                <li key={contact.id}>
+                  <Link to={`contacts/${contact.id}`}>
+                    {contact.first || contact.last ? (
+                      <>
+                        {contact.first} {contact.last}
+                      </>
+                    ) : (
+                      <i>No Name</i>
+                    )}{" "}
+                    {contact.favorite && <span>★</span>}
+                  </Link>
+                </li>
+              ))}
             </ul>
+          ) : (
+            <p>
+              <i>No contacts</i>
+            </p>
+          )}
           </nav>
         </div>
         <div id="detail"></div>
         <Outlet />
       </>
     );
+    
   }
+ 
