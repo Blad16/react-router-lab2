@@ -14,3 +14,25 @@ export default function ErrorPage() {
     </div>
   );
 }
+<Route
+  path="/invoices/:id"
+  // if an exception is thrown here
+  loader={loadInvoice}
+  // here
+  action={updateInvoice}
+  // or here
+  element={<Invoice />}
+  // this will render instead of `element`
+  errorElement={<ErrorBoundary />}
+/>;
+
+function Invoice() {
+  return <div>Happy {path}</div>;
+}
+
+function ErrorBoundary() {
+  let error = useRouteError();
+  console.error(error);
+  // Uncaught ReferenceError: path is not defined
+  return <div>Dang!</div>;
+}
