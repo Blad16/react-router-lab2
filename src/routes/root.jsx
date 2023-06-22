@@ -17,6 +17,12 @@ import {
     const contact = await createContact();
     return { contact };
   }
+  export async function loader({ request }) {
+    const url = new URL(request.url);
+    const q = url.searchParams.get("q");
+    const contacts = await getContacts(q);
+    return { contacts };
+  }
   
 
 
@@ -43,7 +49,9 @@ export default function Root() {
                 placeholder="Search"
                 type="search"
                 name="q"
+                
               />
+              
               <div
                 id="search-spinner"
                 aria-hidden
